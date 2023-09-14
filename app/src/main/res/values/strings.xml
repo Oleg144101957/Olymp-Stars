@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Olymp Stars</string>
+    <string name="csdcsdsd">Loaging...</string>
+    <string name="play">Play</string>
+    <string name="score_0">Score: 0</string>
+    <string name="scores_background">Scores background</string>
+    <string name="time_0">Time: 0</string>
+    <string name="your_scores_is_0">Your scores is:</string>
+    <string name="_0">0</string>
+    <string name="app_id_id">6341427265955464</string>
+    <string name="token">9f58dfed93ef0802d4251ea782796d39</string>
+</resources>
