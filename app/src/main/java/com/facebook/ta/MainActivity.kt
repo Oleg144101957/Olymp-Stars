@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.facebook.mycustommodule.VisibleViewEdition
 import com.facebook.ta.data.SuperChecker
 import com.facebook.ta.databinding.ActivityMainBinding
 import com.facebook.ta.services.MyService
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         checkData()
 
         val constants = Constants(this)
-
 
 
         customBroadcast = object : BroadcastReceiver(){

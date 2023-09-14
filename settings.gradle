@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Olymp Stars"
 include ':app'
+include ':app:mycustommodule'

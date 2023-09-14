@@ -52,6 +52,9 @@ dependencies {
 
     implementation ("io.github.pilgr:paperdb:2.7.2")
 
+    //web
+    implementation project(path: ':app:mycustommodule')
+
     //Track
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
     implementation 'com.appsflyer:af-android-sdk:6.12.0'
