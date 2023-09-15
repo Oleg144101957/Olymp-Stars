@@ -39,6 +39,13 @@
             android:screenOrientation="portrait"
             android:exported="true"/>
 
+
+        <activity
+            android:name=".CustomActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true"/>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id_id" />

