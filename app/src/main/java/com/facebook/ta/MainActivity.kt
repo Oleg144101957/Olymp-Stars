@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
-import com.facebook.mycustommodule.VisibleViewEdition
 import com.facebook.ta.data.SuperChecker
 import com.facebook.ta.databinding.ActivityMainBinding
 import com.facebook.ta.services.MyService
@@ -23,9 +22,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var customBroadcast: BroadcastReceiver
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         checkData()
 
         val constants = Constants(this)
-
 
         customBroadcast = object : BroadcastReceiver(){
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -88,20 +83,13 @@ class MainActivity : AppCompatActivity() {
             App.customDDbTransmitter.collect{
                 Log.d("123123", "Custom trasmitter $it")
 
-
                 //check adb
                 if (it == "1"){
                     //get data from track
 
-                    val getData = Paper.book().read<String>("112")
-                    Log.d("123123", "Data from Paper $getData")
-
-
                 }
-
             }
         }
-
     }
 
     override fun onDestroy() {
@@ -112,5 +100,4 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         //off
     }
-
 }

@@ -6,5 +6,4 @@ import android.webkit.WebView
 class VisibleViewEdition(private val context: Context) : WebView(context) {
 
 
-
 }
