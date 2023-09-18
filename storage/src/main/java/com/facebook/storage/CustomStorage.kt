@@ -1,4 +1,4 @@
-package com.facebook.ta.data
+package com.facebook.storage
 
 import com.facebook.ta.Constants
 import io.paperdb.Paper

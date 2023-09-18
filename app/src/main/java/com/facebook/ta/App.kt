@@ -1,12 +1,10 @@
 package com.facebook.ta
 
 import android.app.Application
-import android.util.Log
 import com.facebook.ta.data.CustomStorage
 import com.onesignal.OneSignal
 import io.paperdb.Paper
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class App : Application() {
 

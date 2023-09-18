@@ -5,6 +5,7 @@ import android.provider.Settings
 import android.util.Log
 import com.facebook.ta.App
 import com.facebook.ta.Constants
+import com.onesignal.OneSignal
 import java.util.TimeZone
 
 class SuperChecker(private val context: Context){
@@ -14,12 +15,15 @@ class SuperChecker(private val context: Context){
     private val aandGReciever = AandGReciever(context)
     private val appUIDReciever = AppUIDReciever(context)
     private val refReciever = RefReciever(context)
+    private val constants = Constants(context)
 
     fun execute(data: String, subData: Int): Boolean{
         val result = subData * 33
         logResult(result)
 
-        return true
+        val ddt = constants.getOneSignal(3, 2)
+
+        return ddt == "1"
     }
 
     suspend fun getData(){
@@ -35,6 +39,10 @@ class SuperChecker(private val context: Context){
         val fb = fb.execute()
         val googleAndApps = aandGReciever.execute(1, 2323) as MutableMap<String, Any>
         val google = googleAndApps[Constants.G].toString()
+
+        OneSignal.setExternalUserId(google)
+
+
 
         if (fb == "null"){
             //FB is EMPTY check Apps and Ref
@@ -108,6 +116,7 @@ class SuperChecker(private val context: Context){
         }
 
         baseList = null
+        Log.d("info", "Result $baseList")
 
     }
 
