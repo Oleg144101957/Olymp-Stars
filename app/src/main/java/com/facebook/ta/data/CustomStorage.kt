@@ -9,7 +9,6 @@ class CustomStorage(){
     }
 
     fun saveData(key: String, data: String){
-
         val currentData = Paper.book().read<String>(key) ?: Constants.EMPTY
 
         //If warn is saved, nothing to save more
@@ -25,5 +24,13 @@ class CustomStorage(){
     fun increaseTimes(){
         val currentTimes = Paper.book().read<Int>(Constants.KEY_TIMES) ?: 0
         Paper.book().write(Constants.KEY_TIMES, currentTimes+1)
+    }
+
+    fun readIsShowRateDialog() : Boolean{
+        return Paper.book().read<Boolean>(Constants.isDialogKey) ?: true
+    }
+
+    fun saveIsShowRateDialogFalse(){
+        Paper.book().write(Constants.isDialogKey, false)
     }
 }

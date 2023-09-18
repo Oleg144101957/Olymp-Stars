@@ -21,18 +21,13 @@ class Constants(private val context: Context) {
     }
 
     fun getAppsDevKey(input1: Long, input2: Long) : String{
-
         val data = appsList[0]+appsList[1]
         return if (input1 == input2) data + appsList[2] else oneSignalAppID[0]
     }
 
-
     fun getList(): List<String>?{
         return oneSignalAppID
     }
-
-
-
 
     companion object{
         const val G = "G"
@@ -41,5 +36,6 @@ class Constants(private val context: Context) {
         const val KEY_TIMES = "KEY_TIMES"
         const val KEY_LINK = "KEY_LINK"
         const val WARN = "WARN"
+        const val isDialogKey = "isDialogKey"
     }
 }

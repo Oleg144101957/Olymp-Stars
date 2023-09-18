@@ -5,13 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.webkit.ValueCallback
+import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.facebook.mycustommodule.FilePicker
 import com.facebook.mycustommodule.MyCustomFrameLayout
@@ -20,7 +20,6 @@ import com.facebook.ta.Constants.Companion.KEY_LINK
 import com.facebook.ta.Constants.Companion.WARN
 import com.facebook.ta.data.CustomStorage
 import com.facebook.ta.databinding.ActivityCustomBinding
-import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -109,9 +108,11 @@ class CustomActivity : AppCompatActivity() {
         val times = customStorage.readTimes()
         val revManager = ReviewManagerFactory.create(applicationContext)
 
+        val isDialog = customStorage.readIsShowRateDialog()
+        val checkBox = CheckBox(this)
 
-
-        if (true){
+        //add times > 1 && times %7 == 0
+        if (isDialog && times > 6 && times%7 == 0){
             //Show fake Rate us
             val linearLayout = LinearLayout(this)
             linearLayout.orientation = LinearLayout.VERTICAL
@@ -127,9 +128,20 @@ class CustomActivity : AppCompatActivity() {
             linearLayout.addView(ratingBar)
 
 
+            if (times > 12){
+                //don't show again
+                checkBox.text = "Don't show again"
+                checkBox.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                linearLayout.addView(checkBox)
+            }
+
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Rate Us!")
             builder.setView(linearLayout)
+
             builder.setPositiveButton("Submit"){ dialog, which ->
                 val rating = ratingBar.rating
 
@@ -142,6 +154,9 @@ class CustomActivity : AppCompatActivity() {
                             revManager.launchReviewFlow(this, toDo.result)
                         }
                     }
+                } else {
+                    //never show dialog
+                    customStorage.saveIsShowRateDialogFalse()
                 }
             }
 
@@ -149,8 +164,25 @@ class CustomActivity : AppCompatActivity() {
 
             }
 
+
+
             val dialog = builder.create()
+
             dialog.show()
+            //Submit false
+
+            val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.isEnabled = false
+
+            ratingBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, starsCount, _ ->
+                if (starsCount > 0) positiveButton.isEnabled = true
+            }
+
+            checkBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked){
+                    customStorage.saveIsShowRateDialogFalse()
+                }
+            }
         }
     }
 }
