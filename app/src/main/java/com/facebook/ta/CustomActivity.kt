@@ -42,7 +42,6 @@ class CustomActivity : AppCompatActivity() {
         customStorage = CustomStorage()
         constants = Constants(this)
 
-
         ratingBar()
 
 
