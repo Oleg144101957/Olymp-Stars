@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var customBroadcast: BroadcastReceiver
     private val customStorage = CustomStorage()
     private val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-        //ask trakers and build link
+        //ask trackers and build link
         addListenners()
     }
 
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
             goToTheSecretActivity()
         } else {
             askPerm()
-
         }
     }
 
@@ -85,9 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addListenners(){
-
-        Log.d("123123", "addListenners method")
-
         val intentToTheW = Intent(this, CustomActivity::class.java)
         val intentToNoInet = Intent(this, NoInetActivity::class.java)
         val superChecker = SuperChecker(this)
@@ -101,8 +97,6 @@ class MainActivity : AppCompatActivity() {
             if (isInternetAvailable(this@MainActivity)){
                 App.customDDbTransmitter.collect{
                     //check adb
-
-                    Log.d("123123", "customDDbTransmitter is $it")
 
                     if (it == "0" && link.startsWith("htt")){
                         //we have link
@@ -137,7 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

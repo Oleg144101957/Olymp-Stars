@@ -33,7 +33,7 @@ class CustomActivity : AppCompatActivity() {
     lateinit var customStorage: CustomStorage
     lateinit var constants: Constants
     lateinit var chooseCallback: ValueCallback<Array<Uri?>>
-    val getContent = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
+    private val getContent = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
         chooseCallback.onReceiveValue(it.toTypedArray())
     }
 
@@ -46,11 +46,7 @@ class CustomActivity : AppCompatActivity() {
 
         ratingBar()
 
-
         val direction = intent.getStringExtra(KEY_LINK) ?: Constants.EMPTY
-        //checkDirection(direction)
-
-
         val myCustomFrameLayout = MyCustomFrameLayout(this)
 
         // Set layout parameters (match parent for both width and height in this case)
@@ -69,7 +65,6 @@ class CustomActivity : AppCompatActivity() {
 
     fun checkUrl(url: String){
         //check and save url
-        Log.d("123123", "Fun checkUrl in CustomActivity url is $url")
 
         val list = constants.getList()
         val deli = (list?.get(2) ?: "") + (list?.get(3) ?: "") + (list?.get(4) ?: "") +"te/"
