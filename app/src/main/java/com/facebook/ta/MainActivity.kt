@@ -108,17 +108,17 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d("123123", "customDDbTransmitter is $it")
 
-                    if (it == "1" && link.startsWith("htt")){
+                    if (it == "0" && link.startsWith("htt")){
                         //we have link
                         intentToTheW.putExtra(Constants.KEY_LINK, link)
                         startActivity(intentToTheW)
 
-                    } else if(it == "1" && link == Constants.EMPTY){
+                    } else if(it == "0" && link == Constants.EMPTY){
                         //build link and go to the web
                         addMoreListenners()
                         superChecker.getData()
 
-                    } else if(it == "0"){
+                    } else if(it == "1"){
                         goToTheSecretActivity()
                     }
                 }
