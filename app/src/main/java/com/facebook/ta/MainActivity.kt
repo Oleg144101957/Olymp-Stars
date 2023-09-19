@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.facebook.ta.data.CustomStorage
 import com.facebook.ta.data.SuperChecker
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         addListenners()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -53,10 +55,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         startDevServiceAndRegisterReciever(1, 2, constants)
-    }
 
-    override fun onStart() {
-        super.onStart()
 
         val dataFromStorage = customStorage.readData(Constants.KEY_LINK)
 
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             askPerm()
         }
     }
+
 
     private fun startDevServiceAndRegisterReciever(a: Int, b: Int, constants: Constants){
         val intentForService = Intent(this, MyService::class.java)
@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity() {
             if (isInternetAvailable(this@MainActivity)){
                 App.customDDbTransmitter.collect{
                     //check adb
+
+                    Log.d("123123", "customDDbTransmitter is $it")
 
                     if (it == "0" && link.startsWith("htt")){
                         //we have link
@@ -153,6 +155,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun askPerm(){
         val permission = android.Manifest.permission.POST_NOTIFICATIONS
         requestPermission.launch(permission)
