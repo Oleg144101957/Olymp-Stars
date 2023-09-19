@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var customBroadcast: BroadcastReceiver
     private val customStorage = CustomStorage()
     private val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-
+        //ask trakers and build link
+        addListenners()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,20 +161,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun askPerm(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            val permission = android.Manifest.permission.POST_NOTIFICATIONS
-            if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED){
-                //add listeners
-                addListenners()
-
-            } else {
-                //
-                requestPermission.launch(permission)
-            }
-        } else {
-            addListenners()
-        }
+        val permission = android.Manifest.permission.POST_NOTIFICATIONS
+        requestPermission.launch(permission)
     }
-
 
 }
