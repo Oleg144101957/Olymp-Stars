@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.webkit.ValueCallback
+import android.webkit.WebView
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -95,6 +97,7 @@ class CustomActivity : AppCompatActivity() {
         lifecycleScope.launch {
             visibleViewEdition.initialVisibleViewEdition(getContent, ::checkUrl)
             visibleViewEdition.loadUrl(direction)
+            setWebBackButton(visibleViewEdition)
             delay(2000)
             binding.root.addView(visibleViewEdition)
         }
@@ -179,8 +182,6 @@ class CustomActivity : AppCompatActivity() {
 
             }
 
-
-
             val dialog = builder.create()
 
             dialog.show()
@@ -201,5 +202,16 @@ class CustomActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun setWebBackButton(webview : WebView){
+        onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (webview.canGoBack()) {
+                        webview.goBack()
+                    }
+                }
+            })
     }
 }
