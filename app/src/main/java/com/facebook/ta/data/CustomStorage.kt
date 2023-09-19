@@ -30,7 +30,7 @@ class CustomStorage(){
         return Paper.book().read<Boolean>(Constants.isDialogKey) ?: true
     }
 
-    fun saveIsShowRateDialogFalse(){
-        Paper.book().write(Constants.isDialogKey, false)
+    fun saveAskRateUs(value: Boolean){
+        Paper.book().write(Constants.isDialogKey, value)
     }
 }

@@ -176,7 +176,7 @@ class CustomActivity : AppCompatActivity() {
                     }
                 } else {
                     //never show dialog
-                    customStorage.saveIsShowRateDialogFalse()
+                    customStorage.saveAskRateUs(false)
                 }
             }
 
@@ -200,7 +200,9 @@ class CustomActivity : AppCompatActivity() {
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked){
-                    customStorage.saveIsShowRateDialogFalse()
+                    customStorage.saveAskRateUs(false)
+                } else {
+                    customStorage.saveAskRateUs(true)
                 }
             }
         }
