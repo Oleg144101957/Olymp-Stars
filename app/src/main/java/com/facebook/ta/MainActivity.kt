@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        askPerm()
 
         val constants = Constants(this)
 
@@ -64,7 +63,8 @@ class MainActivity : AppCompatActivity() {
         if (dataFromStorage == Constants.WARN){
             goToTheSecretActivity()
         } else {
-            addListenners()
+            askPerm()
+
         }
     }
 
@@ -86,16 +86,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun addListenners(){
 
+        Log.d("123123", "addListenners method")
+
         val intentToTheW = Intent(this, CustomActivity::class.java)
         val intentToNoInet = Intent(this, NoInetActivity::class.java)
         val superChecker = SuperChecker(this)
         val link = customStorage.readData(Constants.KEY_LINK)
+
+
+        Log.d("123123", "Link in addListenners is $link")
 
         lifecycleScope.launch {
 
             if (isInternetAvailable(this@MainActivity)){
                 App.customDDbTransmitter.collect{
                     //check adb
+
+                    Log.d("123123", "customDDbTransmitter is $it")
+
                     if (it == "0" && link.startsWith("htt")){
                         //we have link
                         intentToTheW.putExtra(Constants.KEY_LINK, link)
@@ -142,7 +150,6 @@ class MainActivity : AppCompatActivity() {
 
     fun isInternetAvailable(context: Context): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network = connectivityManager.activeNetwork ?: return false
             val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
@@ -157,12 +164,15 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             val permission = android.Manifest.permission.POST_NOTIFICATIONS
             if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED){
-                //
+                //add listeners
+                addListenners()
 
             } else {
                 //
                 requestPermission.launch(permission)
             }
+        } else {
+            addListenners()
         }
     }
 

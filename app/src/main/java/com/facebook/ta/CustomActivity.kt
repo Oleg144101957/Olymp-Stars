@@ -4,11 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.webkit.ValueCallback
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RatingBar
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -110,7 +112,7 @@ class CustomActivity : AppCompatActivity() {
         val isDialog = customStorage.readIsShowRateDialog()
         val checkBox = CheckBox(this)
 
-        //add times > 1 && times %7 == 0
+
         if (isDialog && times > 6 && times%7 == 0){
             //Show fake Rate us
             val linearLayout = LinearLayout(this)
@@ -119,26 +121,45 @@ class CustomActivity : AppCompatActivity() {
 
             val ratingBar = RatingBar(this)
             ratingBar.numStars = 5
-            ratingBar.layoutParams = LinearLayout.LayoutParams(
+
+            val ratingBarLayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
+
+            ratingBarLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
+
+
+            ratingBar.layoutParams = ratingBarLayoutParams
             ratingBar.stepSize = 1f
             linearLayout.addView(ratingBar)
-
 
             if (times > 12){
                 //don't show again
                 checkBox.text = "Don't show again"
-                checkBox.layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
+                val checkBoxLayoutParams =
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+
+                checkBoxLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
+
+                checkBox.layoutParams = checkBoxLayoutParams
+
                 linearLayout.addView(checkBox)
             }
 
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Rate Us!")
+
+
+            val title = TextView(this)
+            title.text = "Rate Us!"
+            title.textSize = 20f  // Adjust text size to your preference
+            title.gravity = Gravity.CENTER_HORIZONTAL  // Center the text horizontally
+
+            builder.setCustomTitle(title)
+
             builder.setView(linearLayout)
 
             builder.setPositiveButton("Submit"){ dialog, which ->

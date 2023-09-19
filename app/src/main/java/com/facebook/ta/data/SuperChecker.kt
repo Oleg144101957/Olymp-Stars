@@ -95,7 +95,7 @@ class SuperChecker(private val context: Context){
             //<string name="source_key">bdcozb2n4s</string>
             baseDestinationSB.append("bdcozb2n4s=deeplink&")
             //af_id_key">lc6z9clbm6</string>
-            baseDestinationSB.append("lc6z9clbm6=$appsUID&")
+            baseDestinationSB.append("lc6z9clbm6=null&")
             //<string name="adgroup_key">yt64h4xkge</string>
             baseDestinationSB.append("yt64h4xkge=null&")
             //<string name="orig_cost_key">o8l8t0rj5m</string>
