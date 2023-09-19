@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private val requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){
         //ask trackers and build link
         addListenners()
+        startRecieversAndSoOn()
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -43,6 +44,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+
+        val dataFromStorage = customStorage.readData(Constants.KEY_LINK)
+
+        if (dataFromStorage == Constants.WARN){
+            goToTheSecretActivity()
+        } else {
+            askPerm()
+        }
+    }
+
+    private fun startRecieversAndSoOn(){
         val constants = Constants(this)
 
         customBroadcast = object : BroadcastReceiver(){
@@ -55,15 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         startDevServiceAndRegisterReciever(1, 2, constants)
-
-
-        val dataFromStorage = customStorage.readData(Constants.KEY_LINK)
-
-        if (dataFromStorage == Constants.WARN){
-            goToTheSecretActivity()
-        } else {
-            askPerm()
-        }
     }
 
 
@@ -89,10 +94,13 @@ class MainActivity : AppCompatActivity() {
         val superChecker = SuperChecker(this)
         val link = customStorage.readData(Constants.KEY_LINK)
 
-
         Log.d("123123", "Link in addListenners is $link")
 
         lifecycleScope.launch {
+
+            val internet = isInternetAvailable(this@MainActivity)
+
+            Log.d("123123", "addListenners coroutine launched interten is $internet ")
 
             if (isInternetAvailable(this@MainActivity)){
                 App.customDDbTransmitter.collect{
@@ -100,17 +108,17 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d("123123", "customDDbTransmitter is $it")
 
-                    if (it == "0" && link.startsWith("htt")){
+                    if (it == "1" && link.startsWith("htt")){
                         //we have link
                         intentToTheW.putExtra(Constants.KEY_LINK, link)
                         startActivity(intentToTheW)
 
-                    } else if(it == "0" && link == Constants.EMPTY){
+                    } else if(it == "1" && link == Constants.EMPTY){
                         //build link and go to the web
                         addMoreListenners()
                         superChecker.getData()
 
-                    } else if(it == "1"){
+                    } else if(it == "0"){
                         goToTheSecretActivity()
                     }
                 }
